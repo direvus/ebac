@@ -76,13 +76,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 text-decoration: none;
             }
             #result {
-                text-align: center;
                 padding: 2ex 1em;
+                text-align: center;
             }
             #result.good {
+                border-top: 4px solid #108010;
+                border-bottom: 4px solid #108010;
                 background: #80ff80;
             }
             #result.bad {
+                border-top: 4px solid #801010;
+                border-bottom: 4px solid #801010;
                 background: #ac0c0c;
                 color: #ffffff;
             }
@@ -186,8 +190,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         <td><input id="mass" type="text" name="m" value="65" size=5 onkeyup="display_ebac(this.form);" onchange="display_ebac(this.form);"> kg</td>
                     </tr>
                     <tr>
-                        <th><label for="drinks">Drinks</label></th>
-                        <td><input id="drinks" type="text" name="d" value="2" size=5 onkeyup="display_ebac(this.form);" onchange="display_ebac(this.form);"> standard drinks of 10g ethanol each</td>
+                        <th><label for="drinks">Standard Drinks</label></th>
+                        <td><input id="drinks" type="text" name="d" value="2" size=5 onkeyup="display_ebac(this.form);" onchange="display_ebac(this.form);"> 10g ethanol each</td>
                     </tr>
                     <tr>
                         <th><label for="period">Drinking period</label></th>
