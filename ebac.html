@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<!--
+This is a standalone HTML/JavaScript webabb for estimating Blood Alcohol
+Content, with a particular emphasis on helping people figure out if they are
+too drunk to drive.
+
+Copyright (c) 2014, Brendan Jurd <bj@swords.id.au>
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Blood Alcohol Content Estimator</title>
+        <link href="http://fonts.googleapis.com/css?family=Cabin:400,400italic,700,700italic|Oswald" rel="stylesheet" type="text/css">
+        <style type="text/css">
+            body {
+                padding: 0px;
+                margin: 0px;
+                text-align: center;
+                font-family: "Cabin", "Sorts Mill Goudy", "Georgia", serif;
+            }
+            h1, h2, h3 {
+                font-family: "Oswald", "Impact", "Helvetica", sans;
+                font-weight: normal;
+                text-transform: uppercase;
+            }
+            h1 {
+                font-size: 200%;
+            }
+            h2 {
+                font-size: 180%;
+            }
+            table {
+                margin: 1ex auto;
+            }
+            table.vert > * > tr > * {
+                font-size: 120%;
+            }
+            input {
+                padding: 0.5ex 0.5em;
+                background: #e0e0e0;
+                border: 1px solid #606060;
+                font-size: 150%;
+                font-family: inherit;
+            }
+            table > * > tr > * {
+                padding: 1ex 1em;
+                text-align: left;
+            }
+            table.def > * > tr > th {
+                text-align: right;
+                font-weight: normal;
+            }
+            a {
+                text-decoration: none;
+            }
+            #result {
+                text-align: center;
+                padding: 2ex 1em;
+            }
+            #result.good {
+                background: #80ff80;
+            }
+            #result.bad {
+                background: #ac0c0c;
+                color: #ffffff;
+            }
+            #ebac, #marker {
+                font-size: 400%;
+                font-weight: bold;
+                text-align: center;
+            }
+            #formula {
+                font-size: 200%;
+            }
+        </style>
+        <script type="text/javascript">
+            const PREC = 4;
+            const FACTOR = 1.2;
+            const BLOOD_WATER = 0.806;
+            const BODY_WATER = [0.49, 0.58];
+            const METABOLISM = [0.017, 0.015];
+
+            function get_metabolism(sex) {
+                return METABOLISM[sex];
+            }
+            function ebac(sex, mass, drinks, period) {
+                var water = BODY_WATER[sex];
+                var meta = get_metabolism(sex);
+                var result = (BLOOD_WATER * drinks * FACTOR)
+                    / (mass * water)
+                    - (meta * period);
+                return Math.max(result, 0);
+            }
+            function display_ebac(form) {
+                var sex = 0;
+                if (form.s[1].checked) {
+                    sex = 1;
+                }
+                var mass = parseFloat(form.m.value);
+                var drinks = parseFloat(form.d.value);
+                var period = parseFloat(form.p.value);
+                var result = ebac(sex, mass, drinks, period);
+                var block = document.getElementById('result');
+                var value = document.getElementById('ebac');
+                var units = document.getElementById('units');
+                var marker = document.getElementById('marker');
+                var diff = document.getElementById('diff');
+                if (result) {
+                    value.innerHTML = result.toFixed(PREC);
+                    units.innerHTML = "grams alcohol per decilitre blood";
+                    block.style.display = 'block';
+                    var target = parseFloat(form.t.value);
+                    if (target !== null && !isNaN(target)) {
+                        var delta = result - target;
+                        if (delta < 0) {
+                            block.className = 'good';
+                            marker.innerHTML = "&#x2714";
+                            diff.innerHTML = "which is "
+                                + (-delta).toFixed(PREC)
+                                + " below the target.";
+                        } else {
+                            block.className = 'bad';
+                            marker.innerHTML = "&#x2718";
+                            var meta = get_metabolism(sex);
+                            var wait = delta / meta;
+                            var hours = Math.floor(wait);
+                            var mins = ((wait - hours) * 60).toFixed(0);
+                            var waitlabel = "";
+                            if (hours > 0) {
+                                waitlabel = hours + " hours";
+                                if (mins > 0) {
+                                    waitlabel += " and " + mins + " minutes";
+                                }
+                            } else {
+                                waitlabel = mins + " minutes";
+                            }
+                            diff.innerHTML = "which is <strong>" + delta.toFixed(4)
+                                + "</strong> above the target. "
+                                + "<p>You'd need to wait at least "
+                                + "<strong>" + waitlabel + "</strong> "
+                                + "before you are below the target.</p>";
+                        }
+                    }
+                } else {
+                    block.style.display = 'none';
+                }
+            }
+        </script>
+    </head>
+    <body onload="display_ebac(document.calc);">
+        <h1>Blood Alcohol Content Estimator</h1>
+        <form name="calc" id="calc" onsubmit="display_ebac(this);">
+            <table class="vert">
+                <tbody>
+                    <tr>
+                        <th>Sex</th>
+                        <td>
+                            <div><input id="female" type="radio" name="s" value="0" onclick="display_ebac(this.form);" onchange="display_ebac(this.form);"> <label for="female">Female</label></div>
+                            <div><input id="male" type="radio" name="s" value="1" checked onclick="display_ebac(this.form);" onchange="display_ebac(this.form);"> <label for="male">Male</label></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="mass">Body mass</label></th>
+                        <td><input id="mass" type="text" name="m" value="65" size=5 onkeyup="display_ebac(this.form);" onchange="display_ebac(this.form);"> kg</td>
+                    </tr>
+                    <tr>
+                        <th><label for="drinks">Drinks</label></th>
+                        <td><input id="drinks" type="text" name="d" value="2" size=5 onkeyup="display_ebac(this.form);" onchange="display_ebac(this.form);"> standard drinks of 10g ethanol each</td>
+                    </tr>
+                    <tr>
+                        <th><label for="period">Drinking period</label></th>
+                        <td><input id="period" type="text" name="p" value="1" size=5 onkeyup="display_ebac(this.form);" onchange="display_ebac(this.form);"> hours</td>
+                    </tr>
+                    <tr>
+                        <th><label for="target">Target BAC</label></th>
+                        <td><input id="target" type="text" name="t" value="0.05" size=5 onkeyup="display_ebac(this.form);" onchange="display_ebac(this.form);"> g/dL</td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+        <p>
+            <div id="result">
+                <div id="marker"></div>
+                <p>Your estimated Blood Alcohol Content is
+                    <div id="ebac"></div>
+                    <div id="units"></div>
+                    <div id="diff"></div>
+                </p>
+            </div>
+        </p>
+        <h2>Formula</h2>
+        <p>
+            The formula for this estimate of Blood Alcohol Content is
+            <div id="formula">
+                EBAC = (0.806 &times; <em>drinks</em> &times; 1.2) 
+                     / (<em>mass</em> &times; <em>water</em>)
+                     - (<em>metabolism</em> &times; <em>period</em>)
+            </div>
+        </p>
+        <table class="def">
+            <tbody>
+                <tr><th>0.806</th><td> is the constant for body water in blood</td></tr>
+                <tr><th>1.2</th><td> is a scaling factor defined by the Swedish National Institute of Public Health</td></tr>
+                <tr><th><em>drinks</em></th><td> is the number of standard drinks (10g ethanol) consumed</td></tr>
+                <tr><th><em>mass</em></th><td> is the body mass of the drinker in kilograms</td></tr>
+                <tr><th><em>water</em></th><td> is a body water constant (0.49 for women and 0.58 for men)</td></tr>
+                <tr><th><em>metabolism</em></th><td> is the rate at which the body metabolises alcohol (0.017 for women and 0.015 for men)</td></tr>
+                <tr><th><em>period</em></th><td> is the drinking period in hours</td></tr>
+            </tbody>
+        </table>
+        <p>The formula is derived from the 2009 paper <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2724514/"><em>Alcohol use among university students in Sweden measured by an electronic screening instrument</em></a>.</p>
+    </body>
+</html>
