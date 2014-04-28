@@ -1,38 +1,40 @@
 <!DOCTYPE html>
-<!--
-This is a standalone HTML/JavaScript webabb for estimating Blood Alcohol
-Content, with a particular emphasis on helping people figure out if they are
-too drunk to drive.
-
-Copyright (c) 2014, Brendan Jurd <bj@swords.id.au>
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-* Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
-
-* Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation
-  and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
--->
 <html lang="en">
     <head>
         <meta charset="utf-8">
         <title>Blood Alcohol Content Estimator</title>
-        <link href="http://fonts.googleapis.com/css?family=Cabin:400,400italic,700,700italic|Oswald" rel="stylesheet" type="text/css">
+        <link href="http://fonts.googleapis.com/css?family=Cabin%3A400,400italic,700,700italic%7COswald" rel="stylesheet" type="text/css">
+        <!--
+        This is a standalone HTML/JavaScript webabb for estimating Blood
+        Alcohol Content, with a particular emphasis on providing a guide to
+        help people figure out if they are too drunk to drive.
+
+        Copyright (c) 2014, Brendan Jurd <bj@swords.id.au>
+        All rights reserved.
+
+        Redistribution and use in source and binary forms, with or without
+        modification, are permitted provided that the following conditions are
+        met:
+
+        * Redistributions of source code must retain the above copyright
+          notice, this list of conditions and the following disclaimer.
+
+        * Redistributions in binary form must reproduce the above copyright
+          notice, this list of conditions and the following disclaimer in the
+          documentation and/or other materials provided with the distribution.
+
+        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+        IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+        TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+        PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+        HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+        SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+        LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+        DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+        THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+        (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+        OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+        -->
         <style type="text/css">
             body {
                 padding: 0px;
@@ -208,29 +210,24 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </tbody>
             </table>
         </form>
-        <p>
-            <div id="result">
-                <div id="marker"></div>
-                <p>Your estimated Blood Alcohol Content is
-                    <div id="ebac"></div>
-                    <div id="units"></div>
-                    <div id="diff"></div>
-                </p>
-            </div>
-        </p>
+        <div id="result">
+            <div id="marker"></div>
+            <p>Your estimated Blood Alcohol Content is</p>
+            <div id="ebac"></div>
+            <div id="units"></div>
+            <div id="diff"></div>
+        </div>
         <h2>Formula</h2>
-        <p>
-            The formula for this estimate of Blood Alcohol Content is
-            <div id="formula">
-                <table>
-                    <tbody>
-                        <tr><th>EBAC</th><td>&#x2248; (0.806 &times; <em>drinks</em> &times; 1.2) </td></tr>
-                        <tr><th></th><td>&divide; (<em>mass</em> &times; <em>water</em>)</td></tr>
-                        <tr><th></th><td>&minus; (<em>metabolism</em> &times; <em>period</em>)</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </p>
+        <p>The formula for this estimate of Blood Alcohol Content is:</p>
+        <div id="formula">
+            <table>
+                <tbody>
+                    <tr><th>EBAC</th><td>&#x2248; (0.806 &times; <em>drinks</em> &times; 1.2) </td></tr>
+                    <tr><th></th><td>&divide; (<em>mass</em> &times; <em>water</em>)</td></tr>
+                    <tr><th></th><td>&minus; (<em>metabolism</em> &times; <em>period</em>)</td></tr>
+                </tbody>
+            </table>
+        </div>
         <table class="def">
             <tbody>
                 <tr><th>0.806</th><td> is the constant for body water in blood</td></tr>
