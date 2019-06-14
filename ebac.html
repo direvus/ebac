@@ -141,15 +141,15 @@
                     value.innerHTML = result.toFixed(PREC);
                     units.innerHTML = "grams alcohol per decilitre blood";
                     block.style.display = 'block';
-                    var target = parseFloat(form.t.value);
-                    if (target !== null && !isNaN(target)) {
-                        var delta = result - target;
+                    var max = parseFloat(form.x.value);
+                    if (max !== null && !isNaN(max)) {
+                        var delta = result - max;
                         if (delta < 0) {
                             block.className = 'good';
                             marker.innerHTML = "&#x2714";
                             diff.innerHTML = "which is "
                                 + (-delta).toFixed(PREC)
-                                + " below the target.";
+                                + " below the maximum.";
                         } else {
                             block.className = 'bad';
                             marker.innerHTML = "&#x2718";
@@ -170,7 +170,7 @@
                                 + "</strong> above the target. "
                                 + "<p>You'd need to wait at least "
                                 + "<strong>" + waitlabel + "</strong> "
-                                + "before you are below the target.</p>";
+                                + "before you are below the maximum.</p>";
                         }
                     }
                 } else {
@@ -204,8 +204,8 @@
                         <td><input id="period" type="text" name="p" value="1" size=5 onkeyup="display_ebac(this.form);" onchange="display_ebac(this.form);"> hours</td>
                     </tr>
                     <tr>
-                        <th><label for="target">Target BAC</label></th>
-                        <td><input id="target" type="text" name="t" value="0.05" size=5 onkeyup="display_ebac(this.form);" onchange="display_ebac(this.form);"> g/dL</td>
+                        <th><label for="max">Maximum BAC</label></th>
+                        <td><input id="max" type="text" name="x" value="0.05" size=5 onkeyup="display_ebac(this.form);" onchange="display_ebac(this.form);"> g/dL</td>
                     </tr>
                 </tbody>
             </table>
